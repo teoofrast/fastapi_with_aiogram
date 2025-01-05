@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block content %}
+    <div class='container'>
+        <h2>Панель управления пользователями</h2>
+    {% for user in users %}
+        <section class='my-cont'>
+            <p>Ник пользователя: <b>{{ user.username }}</b></p>
+            <p>ID пользователя: <b>{{ user.id }}</b></p>
+            <p>Имя пользователя: <b>{{ user.first_name }}</b></p>
+            <p>Фамилия пользователя: <b>{{ user.last_name }}</b></p>
+            <p>Админ: <b>{{ user.is_admin }}</b></p>
+            <p><a class='btn btn-outline-primary' href="/api/v1/users/edit/{{ user.id }}?cur_user_id={{ cur_user_id }}" role="button">Редактировать пользователя</a></p>
+        </section>
+    {% endfor %}
+    </div>
+
+{% endblock content %}
+

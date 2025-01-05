@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block content %}
+<div class='container'>
+    <h2>{{ title }}</h2>
+    <section class='my-cont'>
+        <a class='btn btn-primary marginal' href="/api/v1/services?cur_user_id={{ cur_user_id }}">Назад</a>
+        <form action='/api/v1/services/add?cur_user_id={{ cur_user_id }}' method="post">
+            <div class="mb-3">
+                <label>Наименование услуги</label>
+                <input type="text" name="service_name" placeholder="Введите наименование услуги" class="form-control" value=""/>
+            </div>
+            <div class="mb-3">
+                <label>Цена услуги</label>
+                <input type="text" name="service_cost" placeholder="Введите цену услуги" class="form-control" value=""/>
+            </div>
+            <div class="mb-3">
+                <label>Продолжительность услуги</label>
+                <input type="text" name="service_time" placeholder="Введите продолжительность услуги в секундах" class="form-control" value=""/>
+             </div>
+
+            <input type="submit" value="Добавить" class="btn btn-primary mb3">
+        </form>
+    </section>
+</div>
+{% endblock content %}

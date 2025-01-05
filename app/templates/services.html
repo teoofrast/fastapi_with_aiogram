@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block content %}
+    <div class='container'>
+        <h2>Панель управления услугами</h2>
+        <section class="button-section">
+            <a class='btn btn-outline-primary' href="/api/v1/services/add?cur_user_id={{ cur_user_id }}" role="button">Добавить услугу</a></p>
+        </section>
+        {% for service in services %}
+        <section class='my-cont'>
+            <p>ID услуги: <b>{{ service.id }}</b></p>
+            <p>Наименование услуги: <b>{{ service.service_name }}</b></p>
+            <p>Цена услуги: <b>{{ service.service_cost }}</b></p>
+            <p>Продолжительность: <b>{{ service.service_time // 60 }} минут</b></p>
+            <p><a class='btn btn-outline-primary' href="/api/v1/services/edit/{{ service.id }}?cur_user_id={{ cur_user_id }}" role="button">Редактировать услугу</a></p>
+        </section>
+        {% endfor %}
+    </div>
+
+{% endblock content %}
