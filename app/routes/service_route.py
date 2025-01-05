@@ -6,9 +6,8 @@ from typing import Type, Union
 
 # THIRDPARTY
 from fastapi import APIRouter, Form, Request
-from fastapi.responses import JSONResponse
 from fastapi.templating import Jinja2Templates
-from starlette.responses import RedirectResponse
+from starlette.responses import JSONResponse, RedirectResponse
 
 # FIRSTPARTY
 from app.DAL.BaseDAL import UserDAL
@@ -27,7 +26,7 @@ bot_settings = BotSettings()
 @router.get('/api/v1/services')
 async def get_services(
     request: Request, session: SessionDep, cur_user_id: int
-):
+) -> Union[Type['templates.TemplateResponse'], Type['JSONResponse']]:
     """Получает список сервисов для администратора.
 
     Эта функция обрабатывает GET-запрос для получения списка всех сервисов.
@@ -66,7 +65,9 @@ async def get_services(
 
 
 @router.get('/api/v1/services/add')
-async def add_service(request: Request, session: SessionDep, cur_user_id: int):
+async def add_service(
+    request: Request, session: SessionDep, cur_user_id: int
+) -> Type['templates.TemplateResponse']:
     """Отправляет форму для добавления нового сервиса.
 
     Эта функция обрабатывает GET-запрос для отображения страницы с формой
@@ -95,7 +96,7 @@ async def add_one_service(
     service_name: str = Form(...),
     service_cost: int = Form(...),
     service_time: int = Form(...),
-):
+) -> Union[Type['RedirectResponse'], Type['JSONResponse']]:
     """Добавляет новый сервис для администратора.
 
     Эта функция обрабатывает POST-запрос для добавления нового сервиса.
