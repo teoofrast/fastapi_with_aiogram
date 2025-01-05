@@ -1,4 +1,5 @@
 """Управление доступа к БД."""
+
 # STDLIB
 from typing import Annotated
 

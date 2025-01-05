@@ -1,4 +1,5 @@
 """Модуль для запуска бота."""
+
 # STDLIB
 import asyncio
 
@@ -56,10 +57,7 @@ async def send_welcome(message: Message) -> None:
             'last_name': message.from_user.last_name,
         }
         try:
-            await client.post(
-                f'{FASTAPI_URL}/api/v1/users',
-                json=payload
-            )
+            await client.post(f'{FASTAPI_URL}/api/v1/users', json=payload)
         except httpx.RequestError as e:
             await message.answer(f'Ошибка запроса: {e}')
             return
@@ -98,21 +96,20 @@ async def send_admin(message: Message) -> None:
         [
             KeyboardButton(
                 text='Управление пользователями',
-                web_app=WebAppInfo(url=users_webapp_url)
+                web_app=WebAppInfo(url=users_webapp_url),
             )
         ],
         [
             KeyboardButton(
                 text='Управление услугами',
-                web_app=WebAppInfo(url=services_webapp_url)
+                web_app=WebAppInfo(url=services_webapp_url),
             )
         ],
     ]
 
     keyboard = ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
     await message.answer(
-        'Снизу будет ссылка на админ-панель!',
-        reply_markup=keyboard
+        'Снизу будет ссылка на админ-панель!', reply_markup=keyboard
     )
 
 

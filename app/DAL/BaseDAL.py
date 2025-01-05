@@ -10,6 +10,7 @@ from app.models.models import UserModel
 
 class BaseDAL(object):
     """Базовый класс доступа к операциям CRUD."""
+
     model = None
 
     @classmethod
@@ -33,10 +34,10 @@ class UserDAL(BaseDAL):
     @classmethod
     async def add_one_user(cls, data, session: AsyncSession):
         new_user = cls.model(
-            id = data.id,
-            username = data.username,
-            first_name = data.first_name,
-            last_name = data.last_name,
+            id=data.id,
+            username=data.username,
+            first_name=data.first_name,
+            last_name=data.last_name,
         )
         session.add(new_user)
         await session.commit()

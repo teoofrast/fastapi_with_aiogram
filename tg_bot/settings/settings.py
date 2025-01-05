@@ -1,11 +1,4 @@
-"""Модуль для настройки конфигурации бота и FastAPI.
-
-В этом модуле определены классы настроек для бота и для работы с FastAPI.
-Класс `Settings` загружает основные параметры из файла `.env`,
-в то время как класс `BotSettings` предоставляет дополнительные конфигурации
-для бота, включая местоположение файла окружения
-и разрешение дополнительных полей.
-"""
+"""Модуль для настройки конфигурации бота и FastAPI."""
 
 # STDLIB
 import os
@@ -29,6 +22,7 @@ class Settings(BaseSettings):
     Описание:
         - Параметры настраиваются через переменные окружения или файл `.env`.
     """
+
     TG_BOT_TOKEN: str
     FASTAPI_URL: str
     BASE_NGROK_URL: str
@@ -51,6 +45,7 @@ class BotSettings(Settings):
         - Разрешение дополнительных полей в настройках установлено
         флагом `extra='allow'`.
     """
+
     model_config = SettingsConfigDict(
         env_file=os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
@@ -58,5 +53,5 @@ class BotSettings(Settings):
             '..',
             '.env',
         ),
-        extra='allow'
+        extra='allow',
     )

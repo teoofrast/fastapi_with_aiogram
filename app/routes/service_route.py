@@ -1,7 +1,8 @@
 """Маршруты для управления услугами."""
+
 # STDLIB
 from http import HTTPStatus
-from typing import Union
+from typing import Type, Union
 
 # THIRDPARTY
 from fastapi import APIRouter, Form, Request
@@ -25,10 +26,8 @@ bot_settings = BotSettings()
 
 @router.get('/api/v1/services')
 async def get_services(
-        request: Request,
-        session: SessionDep,
-        cur_user_id: int
-) -> Union[templates.TemplateResponse, JSONResponse]:
+    request: Request, session: SessionDep, cur_user_id: int
+):
     """Получает список сервисов для администратора.
 
     Эта функция обрабатывает GET-запрос для получения списка всех сервисов.
@@ -56,22 +55,18 @@ async def get_services(
                     'request': request,
                     'title': 'Услуги',
                     'services': services,
-                    'cur_user_id': cur_user_id
-                }
+                    'cur_user_id': cur_user_id,
+                },
             )
     else:
         return JSONResponse(
             content={'message': 'Access denied'},
-            status_code=HTTPStatus.UNAUTHORIZED
+            status_code=HTTPStatus.UNAUTHORIZED,
         )
 
 
 @router.get('/api/v1/services/add')
-async def add_service(
-        request: Request,
-        session: SessionDep,
-        cur_user_id: int
-) -> templates.TemplateResponse:
+async def add_service(request: Request, session: SessionDep, cur_user_id: int):
     """Отправляет форму для добавления нового сервиса.
 
     Эта функция обрабатывает GET-запрос для отображения страницы с формой
@@ -88,20 +83,19 @@ async def add_service(
         нового сервиса.
     """
     return templates.TemplateResponse(
-        'service_add.html',
-        {'request': request, 'cur_user_id': cur_user_id}
+        'service_add.html', {'request': request, 'cur_user_id': cur_user_id}
     )
 
 
 @router.post('/api/v1/services/add')
 async def add_one_service(
-        request: Request,
-        session: SessionDep,
-        cur_user_id: int,
-        service_name: str = Form(...),
-        service_cost: int = Form(...),
-        service_time: int = Form(...)
-) -> Union[JSONResponse, RedirectResponse]:
+    request: Request,
+    session: SessionDep,
+    cur_user_id: int,
+    service_name: str = Form(...),
+    service_cost: int = Form(...),
+    service_time: int = Form(...),
+):
     """Добавляет новый сервис для администратора.
 
     Эта функция обрабатывает POST-запрос для добавления нового сервиса.
@@ -130,19 +124,15 @@ async def add_one_service(
             new_service = ServiceModel(
                 service_name=service_name,
                 service_cost=service_cost,
-                service_time=service_time
+                service_time=service_time,
             )
-            await ServiceDAL.add_one_service(
-                new_service,
-                session
-            )
+            await ServiceDAL.add_one_service(new_service, session)
             url = f'/api/v1/services?cur_user_id={cur_user_id}'
             return RedirectResponse(
-                url=url,
-                status_code=HTTPStatus.MOVED_PERMANENTLY
+                url=url, status_code=HTTPStatus.MOVED_PERMANENTLY
             )
     else:
         return JSONResponse(
             content={'message': 'Access denied'},
-            status_code=HTTPStatus.UNAUTHORIZED
+            status_code=HTTPStatus.UNAUTHORIZED,
         )
