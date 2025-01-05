@@ -1,3 +1,4 @@
+"""Описание моделей базы данных."""
 # STDLIB
 from datetime import datetime
 
@@ -7,6 +8,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
+    """Базовый класс для БД."""
     pass
 
 
@@ -33,7 +35,9 @@ class UserModel(Base):
     )
 
     # Связь с заказами
-    orders: Mapped[list[OrderModel]] = relationship("OrderModel", back_populates="user")
+    orders: Mapped[list[OrderModel]] = relationship(
+        'OrderModel', back_populates='user'
+    )
 
 
 class ServiceModel(Base):
@@ -53,7 +57,7 @@ class ServiceModel(Base):
 
     # Связь с заказами через промежуточную таблицу
     orders: Mapped[list[OrderModel]] = relationship(
-        "OrderModel", secondary=order_services, back_populates="services"
+        'OrderModel', secondary=order_services, back_populates='services'
     )
 
 
@@ -62,11 +66,18 @@ class OrderModel(Base):
     __tablename__ = 'orders'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.now, nullable=False,
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey('users.id'), nullable=False
     )
-    begin_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)  # Nullable, если не задано
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.now,
+        nullable=False,
+    )
+    begin_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        nullable=True
+    )
     ends_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime,
@@ -77,9 +88,11 @@ class OrderModel(Base):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
     # Связь с пользователем
-    user: Mapped[UserModel] = relationship("UserModel", back_populates="orders")
+    user: Mapped[UserModel] = relationship(
+        'UserModel', back_populates='orders'
+    )
 
     # Связь с услугами через промежуточную таблицу
     services: Mapped[list[ServiceModel]] = relationship(
-        "ServiceModel", secondary=order_services, back_populates="orders"
+        'ServiceModel', secondary=order_services, back_populates='orders'
     )

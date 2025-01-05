@@ -1,3 +1,4 @@
+"""ТОчка входа в приложение."""
 # THIRDPARTY
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -7,16 +8,16 @@ import uvicorn
 
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount('/static', StaticFiles(directory='static'), name='static')
 
 
 app.include_router(user_router)
 app.include_router(service_router)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     uvicorn.run(
         app,
-        host="0.0.0.0",
+        host='0.0.0.0',
         port=8000,
     )
