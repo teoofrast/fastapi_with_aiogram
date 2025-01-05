@@ -4,5 +4,6 @@ venv/
 __pycache__/
 *.pyc
 .env
+test.env
 .DS_Store
 .idea/
