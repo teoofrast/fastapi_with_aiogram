@@ -79,14 +79,15 @@ async def update_user(
 ):
     user = await UserDAL.get_by_id(user_id, session)
     cur_user = await UserDAL.get_by_id(cur_user_id, session)
-    if user and cur_user.is_admin:
-        user.username = username
-        user.first_name = user_firstname
-        user.last_name = user_lastname
-        user.is_admin = is_admin
-        await session.commit()
-        url = f'/api/v1/users?cur_user_id={cur_user_id}'
-        return RedirectResponse(url=url, status_code=301)
+    if user and cur_user:
+        if cur_user.is_admin:
+            user.username = username
+            user.first_name = user_firstname
+            user.last_name = user_lastname
+            user.is_admin = is_admin
+            await session.commit()
+            url = f'/api/v1/users?cur_user_id={cur_user_id}'
+            return RedirectResponse(url=url, status_code=301)
     else:
-        return {'Status': 403, 'message': 'Access denied'}
+        return JSONResponse(content={'message': 'Access denied'}, status_code=HTTPStatus.UNAUTHORIZED)
 
