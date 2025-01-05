@@ -1,15 +1,18 @@
-from fastapi import APIRouter, Request, Depends, Form
+# STDLIB
+from http import HTTPStatus
+
+# THIRDPARTY
+from fastapi import APIRouter, Depends, Form, Request
+from fastapi.responses import JSONResponse
 from fastapi.templating import Jinja2Templates
 from starlette.responses import RedirectResponse
-from http import HTTPStatus
-from fastapi.responses import JSONResponse
 
+# FIRSTPARTY
+from app.DAL.BaseDAL import UserDAL
 from app.DAL.ServiceDAL import ServiceDAL
+from app.database import SessionDep
 from app.models.models import ServiceModel
 from tg_bot.settings.settings import BotSettings
-from app.database import SessionDep
-from app.DAL.BaseDAL import UserDAL
-
 
 router = APIRouter()
 

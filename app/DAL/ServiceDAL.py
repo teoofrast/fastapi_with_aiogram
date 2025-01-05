@@ -1,8 +1,8 @@
+# THIRDPARTY
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
 
+# FIRSTPARTY
 from app.DAL.BaseDAL import BaseDAL
-
 from app.models.models import ServiceModel
 
 

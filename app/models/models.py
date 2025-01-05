@@ -1,6 +1,8 @@
-from __future__ import annotations
+# STDLIB
 from datetime import datetime
-from sqlalchemy import Table, Column, Integer, ForeignKey, DateTime, Boolean
+
+# THIRDPARTY
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, Table
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 

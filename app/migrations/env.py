@@ -1,16 +1,20 @@
+# STDLIB
+from os.path import abspath, dirname
 import sys
-from os.path import dirname, abspath
 
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
 
+# STDLIB
 import asyncio
 from logging.config import fileConfig
-from sqlalchemy import pool
-from sqlalchemy.engine import Connection
-from sqlalchemy.ext.asyncio import async_engine_from_config
+
+# THIRDPARTY
 from alembic import context
 from database import database_url
 from models.models import Base, UserModel
+from sqlalchemy import pool
+from sqlalchemy.engine import Connection
+from sqlalchemy.ext.asyncio import async_engine_from_config
 
 config = context.config
 config.set_main_option("sqlalchemy.url", database_url)

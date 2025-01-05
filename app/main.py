@@ -1,10 +1,9 @@
-import uvicorn
-
+# THIRDPARTY
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-
-from routes.user_route import router as user_router
 from routes.service_route import router as service_router
+from routes.user_route import router as user_router
+import uvicorn
 
 app = FastAPI()
 

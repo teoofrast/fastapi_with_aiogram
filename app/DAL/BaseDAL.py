@@ -1,10 +1,15 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+"""Классы доступа к базовым CRUD операциям."""
 
+# THIRDPARTY
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+# FIRSTPARTY
 from app.models.models import UserModel
 
 
 class BaseDAL(object):
+    """Базовый класс доступа к операциям CRUD."""
     model = None
 
     @classmethod

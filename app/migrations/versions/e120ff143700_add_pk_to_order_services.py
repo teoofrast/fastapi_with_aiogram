@@ -5,11 +5,12 @@ Revises:
 Create Date: 2025-01-04 15:49:53.337041
 
 """
+# STDLIB
 from typing import Sequence, Union
 
+# THIRDPARTY
 from alembic import op
 import sqlalchemy as sa
-
 
 # revision identifiers, used by Alembic.
 revision: str = 'e120ff143700'

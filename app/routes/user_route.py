@@ -1,12 +1,15 @@
+# STDLIB
 from http import HTTPStatus
 
-from fastapi import APIRouter, Request, Form
+# THIRDPARTY
+from fastapi import APIRouter, Form, Request
 from fastapi.templating import Jinja2Templates
-from starlette.responses import RedirectResponse, JSONResponse
+from starlette.responses import JSONResponse, RedirectResponse
 
-from app.schemas.schemas import UserCreateSchema
-from app.database import SessionDep
+# FIRSTPARTY
 from app.DAL.BaseDAL import UserDAL
+from app.database import SessionDep
+from app.schemas.schemas import UserCreateSchema
 from tg_bot.settings.settings import BotSettings
 
 router = APIRouter()
@@ -89,5 +92,7 @@ async def update_user(
             url = f'/api/v1/users?cur_user_id={cur_user_id}'
             return RedirectResponse(url=url, status_code=301)
     else:
-        return JSONResponse(content={'message': 'Access denied'}, status_code=HTTPStatus.UNAUTHORIZED)
-
+        return JSONResponse(
+            content={'message': 'Access denied'},
+            status_code=HTTPStatus.UNAUTHORIZED
+        )
