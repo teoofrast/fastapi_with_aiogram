@@ -2,6 +2,7 @@
 
 # STDLIB
 from http import HTTPStatus
+from typing import Optional, Union
 
 # THIRDPARTY
 from fastapi import APIRouter, Form, Request
@@ -22,7 +23,9 @@ bot_settings = BotSettings()
 
 
 @router.post('/api/v1/users')
-async def add_user(user: UserCreateSchema, session: SessionDep) -> dict:
+async def add_user(
+    user: UserCreateSchema, session: SessionDep
+) -> dict[str, Optional[Union[str, int]]]:
     """Добавляет нового пользователя.
 
     Эта функция обрабатывает POST-запрос на создание нового пользователя.

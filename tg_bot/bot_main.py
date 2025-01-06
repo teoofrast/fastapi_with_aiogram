@@ -23,7 +23,7 @@ bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
 
 
-@dp.message(Command('start'))  # type: ignore[misc]
+@dp.message(Command('start'))
 async def send_welcome(message: Message) -> None:
     """Обрабатывает команду /start.
 
@@ -72,7 +72,7 @@ async def send_welcome(message: Message) -> None:
     )
 
 
-@dp.message(Command('admin'))  # type: ignore[misc]
+@dp.message(Command('admin'))
 async def send_admin(message: Message) -> None:
     """Отправляет пользователю клавиатуру.
 
