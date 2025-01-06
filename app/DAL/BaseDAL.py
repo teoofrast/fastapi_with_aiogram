@@ -22,17 +22,20 @@ class BaseDAL(object):
 
     @classmethod
     async def get_all(cls, session: AsyncSession):
-        """Найти все записи в БД"""
+        """Найти все записи в БД."""
         sql_query = select(cls.model)
         result = await session.execute(sql_query)
         return result.scalars().all()
 
 
 class UserDAL(BaseDAL):
+    """Класс для управление юзерами."""
+
     model = UserModel
 
     @classmethod
-    async def add_one_user(cls, data, session: AsyncSession):
+    async def add_one_user(cls, data: UserModel, session: AsyncSession):
+        """Метод для добавления нового юзера."""
         new_user = cls.model(
             id=data.id,
             username=data.username,

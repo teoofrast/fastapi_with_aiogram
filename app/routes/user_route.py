@@ -2,7 +2,6 @@
 
 # STDLIB
 from http import HTTPStatus
-from typing import Type, Union
 
 # THIRDPARTY
 from fastapi import APIRouter, Form, Request
@@ -65,9 +64,7 @@ async def add_user(user: UserCreateSchema, session: SessionDep) -> dict:
 
 
 @router.get('/api/v1/users')
-async def get_users(
-    request: Request, session: SessionDep, cur_user_id: int
-) -> Union[Type['templates.TemplateResponse'], Type['JSONResponse']]:
+async def get_users(request: Request, session: SessionDep, cur_user_id: int):
     """Получает список пользователей для администраторов.
 
     Эта функция обрабатывает GET-запрос для получения списка всех юзеров.
@@ -109,7 +106,7 @@ async def get_users(
 @router.get('/api/v1/users/edit/{user_id}')
 async def edit_user(
     request: Request, user_id: int, session: SessionDep, cur_user_id: int
-) -> Type['templates.TemplateResponse']:
+):
     """Обрабатывает запрос для редактирования информации о пользователе.
 
     Эта функция обрабатывает GET-запрос на редактирование данных пользователя.
@@ -148,7 +145,7 @@ async def update_user(
     user_firstname: str = Form(...),
     user_lastname: str = Form(...),
     is_admin: bool = Form(...),
-) -> Union[Type['JSONResponse'], Type['RedirectResponse']]:
+):
     """Обновляет информацию о пользователе и возвращает редирект или ошибку.
 
     Параметры:
