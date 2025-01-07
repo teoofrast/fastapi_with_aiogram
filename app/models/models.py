@@ -29,9 +29,9 @@ class UserModel(Base):
     __tablename__ = 'users'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str]
-    first_name: Mapped[str]
-    last_name: Mapped[str]
+    username: Mapped[str] = mapped_column(nullable=True)
+    first_name: Mapped[str] = mapped_column(nullable=True)
+    last_name: Mapped[str] = mapped_column(nullable=True)
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime, default=datetime.now, nullable=False

@@ -8,29 +8,18 @@
     <section class='my-cont'>
         <a class='btn btn-primary marginal' href="/api/v1/services?cur_user_id={{ cur_user_id }}">Назад</a>
         <form action='/api/v1/services/update/{{ service.id }}?cur_user_id={{ cur_user_id }}' method="post">
-{#            <div class='mb-3'>#}
-{#                <label>Ник пользователя</label>#}
-{#                <input type="text" name="username" placeholder="{{ user.username }}" class="form-control" value="{{ user.username }}"/>#}
-{#            </div>#}
-{#            <div class='mb-3'>#}
-{#                <label>ID пользователя</label>#}
-{#                <input type="text" name="user_id" placeholder="{{ user.id }}" class="form-control" value="{{ user.id }}"/>#}
-{#            </div>#}
-{#            <div class='mb-3'>#}
-{#                <label>Имя пользователя</label>#}
-{#                <input type="text" name="user_firstname" placeholder="{{ user.first_name }}" class="form-control" value="{{ user.first_name }}"/>#}
-{#            </div>#}
-{#            <div class='mb-3'>#}
-{#                <label>Фамилия пользователя</label>#}
-{#                <input type="text" name="user_lastname" placeholder="{{ user.last_name }}" class="form-control" value="{{ user.last_name }}"/>#}
-{#            </div>#}
-{#            <div class='mb-3'>#}
-{#                <label>Админ</label>#}
-{#                <select name="is_admin" class="form-control">#}
-{#                    <option value="true" {% if user.is_admin %}selected{% endif %}>True</option>#}
-{#                    <option value="false" {% if not user.is_admin %}selected{% endif %}>False</option>#}
-{#                </select>#}
-{#            </div>#}
+            <div class='mb-3'>
+                <label>Наименование услуги</label>
+                <input type="text" name="servicename" placeholder="{{ service.service_name }}" class="form-control" value="{{ service.service_name }}"/>
+            </div>
+            <div class='mb-3'>
+                <label>Цена услуги</label>
+                <input type="text" name="servicecost" placeholder="{{ service.service_cost }}" class="form-control" value="{{ service.service_cost }}"/>
+            </div>
+            <div class='mb-3'>
+                <label>Продолжительность</label>
+                <input type="text" name="servicetime" placeholder="{{ service.service_time }}" class="form-control" value="{{ service.service_time }}"/>
+            </div>
             <input type="submit" value="Обновить" class="btn btn-primary mb3">
         </form>
     </section>

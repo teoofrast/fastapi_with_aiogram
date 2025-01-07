@@ -10,11 +10,13 @@
         </section>
         {% for service in data %}
         <section class='my-cont'>
-            <p>ID услуги: <b>{{ service.id }}</b></p>
             <p>Наименование услуги: <b>{{ service.service_name }}</b></p>
             <p>Цена услуги: <b>{{ service.service_cost }}</b></p>
             <p>Продолжительность: <b>{{ service.service_time // 60 }} минут</b></p>
             <p><a class='btn btn-outline-primary' href="/api/v1/services/edit/{{ service.id }}?cur_user_id={{ cur_user_id }}" role="button">Редактировать услугу</a></p>
+            <form action='/api/v1/services/delete/{{ service.id }}?cur_user_id={{ cur_user_id }}' method="post">
+                <input type="submit" value="Удалить" class="btn btn-outline-danger mb3">
+            </form>
         </section>
         {% endfor %}
     </div>

@@ -138,3 +138,51 @@ async def edit_service(
             content={'message': 'Access denied'},
             status_code=HTTPStatus.UNAUTHORIZED,
         )
+
+
+@router.post('/api/v1/services/update/{service_id}')
+async def update_service(
+    request: Request,
+    session: SessionDep,
+    service_id: int,
+    cur_user_id: int,
+    servicename: str = Form(...),
+    servicecost: int = Form(...),
+    servicetime: int = Form(...),
+):
+    service = await ServiceDAL.get_by_id(service_id, session)
+    cur_user = await UserDAL.get_by_id(cur_user_id, session)
+    if service and cur_user:
+        if cur_user.is_admin:
+            service.service_name = servicename
+            service.service_cost = servicecost
+            service.service_time = servicetime
+            await session.commit()
+            url = f'/api/v1/services?cur_user_id={cur_user_id}'
+            return RedirectResponse(url=url, status_code=HTTPStatus.MOVED_PERMANENTLY)
+    else:
+        return JSONResponse(
+            content={'message': 'Access denied'},
+            status_code=HTTPStatus.UNAUTHORIZED,
+        )
+
+
+@router.post('/api/v1/services/delete/{service_id}')
+async def delete_service(
+    session: SessionDep,
+    service_id: int,
+    cur_user_id: int,
+):
+    service = await ServiceDAL.get_by_id(service_id, session)
+    cur_user = await UserDAL.get_by_id(cur_user_id, session)
+    if service and cur_user:
+        if cur_user.is_admin:
+            await session.delete(service)
+            await session.commit()
+            url = f'/api/v1/services?cur_user_id={cur_user_id}'
+            return RedirectResponse(url=url, status_code=HTTPStatus.MOVED_PERMANENTLY)
+    else:
+        return JSONResponse(
+            content={'message': 'Access denied'},
+            status_code=HTTPStatus.UNAUTHORIZED,
+        )

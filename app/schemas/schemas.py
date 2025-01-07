@@ -8,7 +8,7 @@ class UserCreateSchema(BaseModel):
     """Схема для валидации данных пользователя."""
 
     id: int = Field(ge=0)
-    username: str
+    username: str | None
     first_name: str | None
     last_name: str | None
 

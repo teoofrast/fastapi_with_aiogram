@@ -2,6 +2,7 @@
 
 # STDLIB
 import asyncio
+import logging
 
 # THIRDPARTY
 from aiogram import Bot, Dispatcher
@@ -22,6 +23,11 @@ BASE_NGROK_URL = bot_settings.BASE_NGROK_URL
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
 
+logging.basicConfig(
+    level=logging.DEBUG,  # Уровень логирования (можно изменить на DEBUG для отладки)
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 @dp.message(Command('start'))
 async def send_welcome(message: Message) -> None:
@@ -56,12 +62,17 @@ async def send_welcome(message: Message) -> None:
             'first_name': message.from_user.first_name,
             'last_name': message.from_user.last_name,
         }
+        logger.debug(f"Отправка данных пользователя на FastAPI: {payload}")
         try:
-            await client.post(f'{FASTAPI_URL}/api/v1/users', json=payload)
+            response = await client.post(f'{FASTAPI_URL}/api/v1/users', json=payload)
+            response.raise_for_status()  # Проверяем статус ответа
+            logger.info(f"Пользователь {message.from_user.id} успешно зарегистрирован")
         except httpx.RequestError as e:
+            logger.error(f"Ошибка запроса: {e}")
             await message.answer(f'Ошибка запроса: {e}')
             return
         except httpx.HTTPStatusError as e:
+            logger.error(f"Ошибка ответа от сервера: {e.response.status_code}")
             await message.answer(f'Ошибка ответа: {e.response.status_code}')
             return
 
@@ -86,12 +97,14 @@ async def send_admin(message: Message) -> None:
         message (Message): Объект сообщения от пользователя, содержащий
         информацию о пользователе и его запросах.
     """
+    logger.info(f"Получена команда /admin от пользователя {message.from_user.id}")
     users_webapp_url = (
         f'{BASE_NGROK_URL}/api/v1/users?cur_user_id={message.from_user.id}'
     )
     services_webapp_url = (
         f'{BASE_NGROK_URL}/api/v1/services?cur_user_id={message.from_user.id}'
     )
+    logger.debug(f"Сформированы URL: users - {users_webapp_url}, services - {services_webapp_url}")
     kb = [
         [
             KeyboardButton(
@@ -115,8 +128,18 @@ async def send_admin(message: Message) -> None:
 
 async def main() -> None:
     """Запускает основной цикл опроса для бота."""
-    await dp.start_polling(bot)
+    logger.info("Запуск бота")
+    try:
+        await dp.start_polling(bot)
+    except Exception as e:
+        logger.critical(f"Критическая ошибка: {e}", exc_info=True)
+    finally:
+        await bot.session.close()
+        logger.info("Бот остановлен")
 
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except (KeyboardInterrupt, SystemExit):
+        logger.info("Бот остановлен пользователем")
