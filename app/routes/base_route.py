@@ -7,13 +7,20 @@ from starlette.responses import JSONResponse
 from fastapi.templating import Jinja2Templates
 
 # FIRSTPARTY
-from app.DAL.BaseDAL import UserDAL, BaseDAL
+from app.DAL.BaseDAL import UserDAL
 from app.database import SessionDep
 
 templates = Jinja2Templates(directory='templates')
 
 
-async def base_route(request: Request ,inst_dal, cur_user_id, html_temp, session: SessionDep, title):
+async def base_route(
+    request: Request ,
+    inst_dal,
+    cur_user_id,
+    html_temp,
+    session: SessionDep,
+    title
+):
     cur_user = await UserDAL.get_by_id(cur_user_id, session)
     if cur_user:
         if cur_user.is_admin:
