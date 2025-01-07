@@ -14,6 +14,7 @@ from app.DAL.BaseDAL import UserDAL
 from app.database import SessionDep
 from app.schemas.schemas import UserCreateSchema
 from tg_bot.settings.settings import BotSettings
+from app.routes.base_route import base_route
 
 router = APIRouter()
 
@@ -68,43 +69,9 @@ async def add_user(
 
 @router.get('/api/v1/users')
 async def get_users(request: Request, session: SessionDep, cur_user_id: int):
-    """Получает список пользователей для администраторов.
-
-    Эта функция обрабатывает GET-запрос для получения списка всех юзеров.
-    Доступ к списку имеют только пользователи с правами администратора. Если
-    текущий пользователь не является администратором, возвращается сообщение
-    о запрете доступа.
-
-    Параметры:
-        request (Request): Объект запроса, передаваемый в шаблон.
-        session (SessionDep): Сессия базы данных для выполнения запросов.
-        cur_user_id (int): ID текущего пользователя, выполняющего запрос.
-
-    Возвращаемое значение:
-        Union[TemplateResponse, JSONResponse]:
-            Если текущий пользователь является администратором, возвращается
-            HTML-шаблон с данными пользователей. Иначе возвращается
-            JSON-ответ с сообщением о запрете доступа.
-    """
-    user = await UserDAL.get_by_id(cur_user_id, session)
-    if user:
-        if user.is_admin:
-            users = await UserDAL.get_all(session)
-            return templates.TemplateResponse(
-                'index.html',
-                {
-                    'request': request,
-                    'title': 'Пользователи',
-                    'users': users,
-                    'cur_user_id': cur_user_id,
-                },
-            )
-    else:
-        return JSONResponse(
-            content={'message': 'Access denied'},
-            status_code=HTTPStatus.UNAUTHORIZED,
-        )
-
+    """Получает список пользователей для администраторов."""
+    answer = await base_route(request, UserDAL, cur_user_id, 'index.html', session, 'Пользователи')
+    return answer
 
 @router.get('/api/v1/users/edit/{user_id}')
 async def edit_user(
@@ -124,9 +91,11 @@ async def edit_user(
 
     Возвращаемое значение:
         TemplateResponse: Отправляет HTML-шаблон с данными для редактирования.
+        JSONResponse: Ответ с сообщением об ошибке, если доступ запрещен.
     """
     user = await UserDAL.get_by_id(user_id, session)
-    if user:
+    cur_user = await UserDAL.get_by_id(cur_user_id, session)
+    if user and cur_user.is_admin:
         return templates.TemplateResponse(
             'edit_user.html',
             {
@@ -135,6 +104,11 @@ async def edit_user(
                 'user': user,
                 'cur_user_id': cur_user_id,
             },
+        )
+    else:
+        return JSONResponse(
+            content={'message': 'Access denied'},
+            status_code=HTTPStatus.UNAUTHORIZED,
         )
 
 

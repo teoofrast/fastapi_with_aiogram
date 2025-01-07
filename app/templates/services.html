@@ -8,7 +8,7 @@
         <section class="button-section">
             <a class='btn btn-outline-primary' href="/api/v1/services/add?cur_user_id={{ cur_user_id }}" role="button">Добавить услугу</a></p>
         </section>
-        {% for service in services %}
+        {% for service in data %}
         <section class='my-cont'>
             <p>ID услуги: <b>{{ service.id }}</b></p>
             <p>Наименование услуги: <b>{{ service.service_name }}</b></p>

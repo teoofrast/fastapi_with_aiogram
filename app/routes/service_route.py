@@ -14,6 +14,7 @@ from app.DAL.ServiceDAL import ServiceDAL
 from app.database import SessionDep
 from app.models.models import ServiceModel
 from tg_bot.settings.settings import BotSettings
+from app.routes.base_route import base_route
 
 router = APIRouter()
 
@@ -26,41 +27,9 @@ bot_settings = BotSettings()
 async def get_services(
     request: Request, session: SessionDep, cur_user_id: int
 ):
-    """Получает список сервисов для администратора.
-
-    Эта функция обрабатывает GET-запрос для получения списка всех сервисов.
-    Доступ к списку имеют только пользователи с правами администратора. Если
-    текущий пользователь не является администратором, возвращается сообщение
-    о запрете доступа.
-
-    Параметры:
-        request (Request): Объект запроса для передачи в шаблон.
-        session (SessionDep): Сессия базы данных для выполнения запросов.
-        cur_user_id (int): ID текущего пользователя, выполняющего запрос.
-
-    Возвращаемое значение:
-        Union[TemplateResponse, JSONResponse]: Если текущий юзер является
-        админом, возвращается HTML-шаблон с данными сервисов. В противном
-        случае возвращается JSON-ответ с сообщением о запрете доступа.
-    """
-    cur_user = await UserDAL.get_by_id(cur_user_id, session)
-    if cur_user:
-        if cur_user.is_admin:
-            services = await ServiceDAL.get_all(session)
-            return templates.TemplateResponse(
-                'services.html',
-                {
-                    'request': request,
-                    'title': 'Услуги',
-                    'services': services,
-                    'cur_user_id': cur_user_id,
-                },
-            )
-    else:
-        return JSONResponse(
-            content={'message': 'Access denied'},
-            status_code=HTTPStatus.UNAUTHORIZED,
-        )
+    """Получает список сервисов для администратора."""
+    answer = await base_route(request, ServiceDAL, cur_user_id, 'services.html',session, 'Услуги')
+    return answer
 
 
 @router.get('/api/v1/services/add')
@@ -129,6 +98,41 @@ async def add_one_service(
             return RedirectResponse(
                 url=url, status_code=HTTPStatus.MOVED_PERMANENTLY
             )
+    else:
+        return JSONResponse(
+            content={'message': 'Access denied'},
+            status_code=HTTPStatus.UNAUTHORIZED,
+        )
+
+
+@router.get('/api/v1/services/edit/{service_id}')
+async def edit_service(
+    request: Request, service_id: int, cur_user_id: int, session: SessionDep,
+):
+    """Страничка для редактирования услуги.
+
+    Параметры:
+        request (Request): Объект запроса для передачи в шаблон.
+        service_id (int): ID услуги.
+        cur_user_id (int): ID текущего пользователя, выполняющего запрос.
+        session (SessionDep): Сессия базы данных для выполнения операций.
+
+    Возвращаемое значение:
+        templates.TemplateResponse() - html страница с формой редактирования.
+        JSONResponse - Ответ с ошибкой для юзера без админ статуса.
+    """
+    service = await ServiceDAL.get_by_id(service_id, session)
+    cur_user = await UserDAL.get_by_id(cur_user_id, session)
+    if service and cur_user.is_admin:
+        return templates.TemplateResponse(
+            'edit_service.html',
+            {
+                'request': request,
+                'title': 'Редактирование услуг',
+                'service': service,
+                'cur_user_id': cur_user_id,
+            },
+        )
     else:
         return JSONResponse(
             content={'message': 'Access denied'},
