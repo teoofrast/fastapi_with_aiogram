@@ -2,7 +2,7 @@
 enable-extensions = B
 inline-quotes = '
 max-line-length = 79
-ignore = ANN002, ANN003, ANN101, D104, ANN204
+ignore = ANN002, ANN003, ANN101, D104, ANN204, ANN201
 exclude =
     .git
     __pycache__

@@ -1,5 +1,8 @@
 """Классы доступа к базовым CRUD операциям."""
 
+# STDLIB
+from typing import List, Optional, Type
+
 # THIRDPARTY
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -14,14 +17,18 @@ class BaseDAL(object):
     model = None
 
     @classmethod
-    async def get_by_id(cls, id: int, session: AsyncSession):
+    async def get_by_id(
+        cls: Type['BaseDAL'], id_: int, session: AsyncSession
+    ) -> Optional[Type['model']]:
         """Найти запись в БД по ID."""
-        sql_query = select(cls.model).filter_by(id=id)
+        sql_query = select(cls.model).filter_by(id=id_)
         user = await session.execute(sql_query)
         return user.scalars().one_or_none()
 
     @classmethod
-    async def get_all(cls, session: AsyncSession):
+    async def get_all(
+        cls: Type['BaseDAL'], session: AsyncSession
+    ) -> List[Type['model']]:
         """Найти все записи в БД."""
         sql_query = select(cls.model)
         result = await session.execute(sql_query)
@@ -34,7 +41,9 @@ class UserDAL(BaseDAL):
     model = UserModel
 
     @classmethod
-    async def add_one_user(cls, data: UserModel, session: AsyncSession):
+    async def add_one_user(
+        cls: Type['UserDAL'], data: UserModel, session: AsyncSession
+    ) -> UserModel:
         """Метод для добавления нового юзера."""
         new_user = cls.model(
             id=data.id,

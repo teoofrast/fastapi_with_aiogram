@@ -1,5 +1,8 @@
 """Методы DAL для управления услугами."""
 
+# STDLIB
+from typing import Type
+
 # THIRDPARTY
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -14,7 +17,9 @@ class ServiceDAL(BaseDAL):
     model = ServiceModel
 
     @classmethod
-    async def add_one_service(cls, data: ServiceModel, session: AsyncSession):
+    async def add_one_service(
+        cls: Type['ServiceDAL'], data: ServiceModel, session: AsyncSession
+    ) -> ServiceModel:
         """Метод для добавления услуги."""
         new_service = cls.model(
             service_name=data.service_name,
